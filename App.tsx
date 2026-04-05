@@ -1,5 +1,6 @@
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header.tsx';
 import InputPanel from './components/InputPanel.tsx';
 import HistoryPanel from './components/HistoryPanel.tsx';
@@ -68,6 +69,10 @@ const App: React.FC = () => {
 
     return (
         <div className="min-h-screen">
+            <Routes>
+                <Route path="/" element={<Navigate to="/describe" replace />} />
+                <Route path="*" element={
+                    <>
             <Header />
             <main className="px-4 pb-20 pt-8 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl space-y-10">
@@ -302,6 +307,9 @@ const App: React.FC = () => {
                     </section>
                 </div>
             </main>
+                    </>
+                } />
+            </Routes>
         </div>
     );
 };

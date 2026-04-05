@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
     enhancePrompt,
     generateImagePreview,
@@ -17,7 +18,28 @@ import { VisualStyle, HistoryItem, InputMode, Template, GroundingSource } from '
 // Wait, we can define VISUAL_STYLES in constants or keep it where it is and pass it if we need to.
 
 export function useAppLogic(VISUAL_STYLES: VisualStyle[]) {
-    const [inputMode, setInputMode] = useState<InputMode>('description');
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const currentPath = location.pathname;
+    let inputMode: InputMode = 'description';
+    if (currentPath === '/blueprint') inputMode = 'blueprint';
+    else if (currentPath === '/design-system') inputMode = 'design-system';
+    else if (currentPath === '/draw') inputMode = 'design';
+    else if (currentPath === '/remix') inputMode = 'modify';
+    else if (currentPath === '/clone') inputMode = 'clone';
+    else if (currentPath === '/describe') inputMode = 'description';
+    // Fallback logic handled below or defaults to 'description'
+
+    const setInputMode = useCallback((mode: InputMode) => {
+        if (mode === 'description') navigate('/describe');
+        else if (mode === 'blueprint') navigate('/blueprint');
+        else if (mode === 'design-system') navigate('/design-system');
+        else if (mode === 'design') navigate('/draw');
+        else if (mode === 'modify') navigate('/remix');
+        else if (mode === 'clone') navigate('/clone');
+        else navigate('/describe');
+    }, [navigate]);
     const [userInput, setUserInput] = useState<string>(''); 
     const [urlInput, setUrlInput] = useState<string>('');
     const [screenshots, setScreenshots] = useState<string[]>([]);
